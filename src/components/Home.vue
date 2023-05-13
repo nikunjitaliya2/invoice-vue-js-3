@@ -7,7 +7,9 @@ const discount = ref(0)
 const GstPlus = ref(0)
 const TotalAmount = ref(0)
 
+
 const ItemList = reactive({
+
   itemName: '',
   Qlt: 0,
   Uom: '',
@@ -31,36 +33,88 @@ const discountTotal = async (Quelity, Rate, DiscountTotal, gst) => {
   GstPlus.value = (gst / 100) * (discount.value)
 
   TotalAmount.value = discount.value + GstPlus.value
-  // console.log('total discount ----> ', discount.value)
-  // console.log('total gst ----> ', GstPlus.value)
-  console.log('tTotalAmount.value ----> ', TotalAmount.value)
+  // console.log('tTotalAmount.value ----> ', TotalAmount.value)
 }
 
-// without function
+const totalQuality = ref(0);
+const totalRate = ref(0);
 
-// discount.value = (ItemList.Rate * ItemList.Qlt) - ((ItemList.Discount / 100) * ( ItemList.Qlt * ItemList.Rate))
-// GstPlus.value = (ItemList.Gst / 100) * (discount.value)
-// console.log('total discount ----> ', discount.value)
-// console.log('total gst ----> ', GstPlus.value)
 
 const SaveProductDetails = async () => {
   await discountTotal(ItemList.Qlt, ItemList.Rate, ItemList.Discount, ItemList.Gst)
+
+  console.log('log ->',applicants)
+
+  // Test
+  // applicants.filter((e) => {
+  //   console.log('items details -----> ',e.Qlt)
+  // })
+
+  // for(let i = 0; i < applicants.length; i++){
+  //   totalQuality.value = applicants[i].Qlt
+  //   // console.log('totalQuality.value',totalQuality.value)
+  //   // console.log('items details -----> ',applicants[i])
+  // }
+
+  totalQuality.value = applicants.reduce((acc, obj) => acc + obj.Qlt, 0);
+  applicants.map((item,index) => {
+    if(index)
+    console.log('item',item,index)
+  })
+  console.log('totalQuality1.value --->',totalQuality.value)
 }
 
+const count = ref(0)
 const applicants = reactive([
   {
-    previous: '',
-    expiration: ''
+    id: count.value,
+    itemName: '',
+    Qlt: 0,
+    Uom: '',
+    Rate: 0,
+    Gst: 0,
+    Discount: 0,
+    Amount: 0
   }
 ])
 
-function AddField() {
+const  AddField = async () => {
   applicants.push({
-    previous: '',
-    expiration: ''
+    id: count.value++,
+    itemName: '',
+    Qlt: 0,
+    Uom: '',
+    Rate: 0,
+    Gst: 0,
+    Discount: 0,
+    Amount: 0
   })
+}
 
-  console.log('applicants', applicants)
+// let check = [
+//   {
+//     itemName: '',
+//     Qlt: 1,
+//     Uom: '',
+//     Rate: 100000,
+//     Gst: 0,
+//     Discount: 10,
+//     Amount: 0
+//   },
+//   {
+//     itemName: '',
+//     Qlt: 2,
+//     Uom: '',
+//     Rate: 100000,
+//     Gst: 18,
+//     Discount: 5,
+//     Amount: 0
+//   }
+// ]
+
+const deleteField = (item) => {
+  console.log('item --->', item)
+  applicants.splice(item, 1)
 }
 
 </script>
@@ -110,7 +164,7 @@ function AddField() {
       </div>
     </div>
     <!--    item list-->
-    <span class='my-3 text-black fs-4'>Item List</span>
+    <h4 class='py-2 text-black fs-4'>Item List</h4>
     <div class='row'>
       <div class='col-4'><span>Name of item</span></div>
       <div class='col-1'><span>Qty</span></div>
@@ -125,27 +179,28 @@ function AddField() {
         <div class='row py-2'>
           <div class='col-4'>
 <!--            <label for='NameItem' class='form-label'>Name of item</label>-->
-            <input type='text' class='form-control' id='NameItem' v-model='ItemList.itemName' placeholder='lorem ipsums'>
+            <input type='text' class='form-control' id='NameItem' v-model='applicant.itemName' placeholder='lorem ipsums'>
           </div>
           <div class='col-1'>
 <!--            <label for='quality' class='form-label'>Qty</label>-->
-            <input type='number' class='form-control' id='quality' v-model='ItemList.Qlt' placeholder='10'>
+<!--            <input type='number' class='form-control' id='quality' v-model='applicant.Qlt' placeholder='10'>-->
+            <input type='number' class='form-control' id='quality' v-model='applicant.Qlt' placeholder='10'>
           </div>
           <div class='col-1'>
-<!--            <label for='uom' class='form-label'>UOM</label>-->
-            <input type='number' class='form-control' id='uom' v-model='ItemList.Uom' placeholder='MRTS'>
+            <!--            <label for='uom' class='form-label'>UOM</label>-->
+            <input type='number' class='form-control' id='uom' v-model='applicant.Uom' placeholder='MRTS'>
           </div>
           <div class='col-1'>
 <!--            <label for='ratePer' class='form-label'>Rate Per</label>-->
-            <input type='number' class='form-control' id='ratePer' v-model='ItemList.Rate' placeholder='$30'>
+            <input type='number' class='form-control' id='ratePer' v-model='applicant.Rate' placeholder='$30'>
           </div>
           <div class='col-1'>
 <!--            <label for='gstRate' class='form-label'>GST Rate</label>-->
-            <input type='number' class='form-control' v-model='ItemList.Gst' id='gstRate' placeholder='10'>
+            <input type='number' class='form-control' v-model='applicant.Gst' id='gstRate' placeholder='10'>
           </div>
           <div class='col-1'>
 <!--            <label for='discount' class='form-label'>Discount</label>-->
-            <input type='number' class='form-control' id='discount' v-model='ItemList.Discount' placeholder='10'>
+            <input type='number' class='form-control' id='discount' v-model='applicant.Discount' placeholder='10'>
           </div>
           <div class='col-2'>
 <!--            <label for='Amount' class='form-label'>Amount</label>-->
@@ -153,7 +208,7 @@ function AddField() {
           </div>
           <div class='col d-flex align-items-end'>
             <i class='fa-solid fa-pen fs-5 px-1' style='cursor: pointer '></i>
-            <i class='fa-solid fa-trash fs-5 px-1' style='cursor: pointer '></i>
+            <i class='fa-solid fa-trash fs-5 px-1' @click='deleteField(applicant)' style='cursor: pointer '></i>
             <i class='fa-solid fa-plus fs-5' style='cursor: pointer ' @click='AddField'></i>
           </div>
         </div>
@@ -164,7 +219,7 @@ function AddField() {
         <p class='fw-bold py-3'>Total</p>
       </div>
       <div class='col-5'>
-        <p class='fw-bold py-3'>{{ ItemList.Qlt === '' ? 0 : ItemList.Qlt }}</p>
+        <p class='fw-bold py-3'>{{ totalQuality === '' ? 0 : totalQuality }}</p>
       </div>
       <div class='col'>
         <p class='fw-bold py-3'>{{ TotalAmount }}</p>
@@ -214,6 +269,7 @@ function AddField() {
           </div>
           <div class='row'>
             <div class='col-3 d-flex justify-content-start'>
+<!--              1,000+ (1,000X(18/100)) = 1,000+180 = Rs. 1,180-->
               <span class='common-text'>SGST</span>
             </div>
             <div class='col'>
@@ -237,15 +293,15 @@ function AddField() {
     </div>
   </div>
 
-  <!--  <button @click='AddField'>Add Field</button>-->
-  <!--  <br>-->
-  <!--  <div class='previous' v-for='applicant in applicants'>-->
-  <!--    <span>{{ applicants.previous }}</span>-->
-  <!--    <label for='duration'>= Previous Visa:</label>-->
-  <!--    <input type='text' id='duration' v-model='applicant.previous' required>-->
-  <!--    <label for='duration1'>Year of expiration:</label>-->
-  <!--    <input type='text' id='duration1' v-model='applicant.expiration' required>-->
-  <!--  </div>-->
+<!--    <button @click='AddField'>Add Field</button>-->
+<!--    <br>-->
+<!--    <div class='previous' v-for='applicant in applicants'>-->
+<!--      <span>{{ applicants.previous }}</span>-->
+<!--      <label for='duration'>= Previous Visa:</label>-->
+<!--      <input type='text' id='duration' v-model='applicant.previous' required>-->
+<!--      <label for='duration1'>Year of expiration:</label>-->
+<!--      <input type='text' id='duration1' v-model='applicant.expiration' required>-->
+<!--    </div>-->
 </template>
 
 <style scoped>
