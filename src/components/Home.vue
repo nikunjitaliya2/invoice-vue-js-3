@@ -61,6 +61,18 @@ const SaveProductDetails = async () => {
     if(index)
     console.log('item',item,index)
   })
+
+  const newArray = applicants.map(obj => {
+    const discountPrice = obj.Rate * obj.Qlt * (1 - discount);
+    const amount = discountPrice * (1 + obj.Gst / 100);
+    return {
+      ...obj,
+      discountPrice,
+      // percentage: discountPrice / totalPrice * 100,
+      Amount: amount
+    }
+  });
+  console.log('newArray', newArray)
   console.log('totalQuality1.value --->',totalQuality.value)
 }
 
@@ -80,7 +92,7 @@ const applicants = reactive([
 
 const  AddField = async () => {
   applicants.push({
-    id: count.value++,
+    id: ++count.value,
     itemName: '',
     Qlt: 0,
     Uom: '',
